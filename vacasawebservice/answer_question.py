@@ -6,7 +6,9 @@ Main functions to answer the question
 """
 def answer_question( query: str ):
    #Parses input, determines answer, returns string
-   print(query) 
+   print(query)
+   if (query == None):
+       return ''
    query_words = query.split(' ')
    strquery=query.lower()
    if (query_words[0].lower() == 'what'):
