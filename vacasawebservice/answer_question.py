@@ -5,7 +5,7 @@ import os
 Main functions to answer the question
 """
 def answer_question( query: str ):
-    #Parses input, determines answer, returns string
+   #Parses input, determines answer, returns string
    print(query) 
    query_words = query.split(' ')
    strquery=query.lower()
@@ -249,8 +249,9 @@ def math_solver(problemArray:list):
         if (problemArray[idx].isnumeric()):
             if (problemArray[idx+1] in ["+","-"]):
                 if (problemArray[idx+2].isnumeric()):
-                    # perform math operation
+                    # perform math operation and put result in place of second number
                     problemArray[idx+2] = str(perform_math_operation(problemArray[idx],problemArray[idx+1],problemArray[idx+2]))
+                    # delete array indexes that have been processed
                     del problemArray[idx+1]
                     del problemArray[idx]
                     print(problemArray)
@@ -284,12 +285,15 @@ def ordering_solver(orderingString):
     orderingItems = str(orderingArray[0])
     previousReturnItems = []
     returnItems = [] 
+    # deep copy array so input remains unchanged
     returnItems[:] = orderingItems 
-    while (arrays_differ(previousReturnItems, returnItems)):
+    array_loop_count = 0
+    max_array_loop_count = 1000
+    while (arrays_differ(previousReturnItems, returnItems) and array_loop_count < max_array_loop_count):
+        # repeat until an iteration results in no changes (up to max_array_loop_times)
+        array_loop_count += 1
         previousReturnItems = returnItems.copy()
         for idx in range(1, len(orderingArray)):
-            #if (orderingArray[idx].find("-")>0):
-                # skip first/any row that isn't ordering info
                 orderingRow = str(orderingArray[idx])
 
                 itemToOrder = orderingRow[0]
@@ -317,24 +321,25 @@ def ordering_solver(orderingString):
     return str1
 
 def moveItemsForward(itemToMoveIdx,newItemIdx, itemsToReturn):
-    #print("move forward")
+    # not used - opposite of moveItemsBackward
     itemToOrder = itemsToReturn[itemToMoveIdx]
     for itemsToMoveIdx in range(itemToMoveIdx,newItemIdx):
         itemsToReturn[itemsToMoveIdx]=itemsToReturn[itemsToMoveIdx+1]
     itemsToReturn[newItemIdx]=itemToOrder
-    #print(itemsToReturn)
     return itemsToReturn
 
 def moveItemsBackward(itemToMoveIdx,newItemIdx, itemsToReturn):
-    #print("move backward")
+    # move itemToMoveIdx to newItemIdx (which should be less than itemToMoveIdx)
+    # move all items in between (include newItemIdx) forward 1 index
     itemToOrder = itemsToReturn[itemToMoveIdx]
     for itemsToMoveIdx in range(itemToMoveIdx-1,newItemIdx-1,-1):
         itemsToReturn[itemsToMoveIdx+1]=itemsToReturn[itemsToMoveIdx]
     itemsToReturn[newItemIdx]=itemToOrder
-    #print(itemsToReturn)    
     return itemsToReturn
 
 def arrays_differ(array1:list,array2:list):
+    # return false is every index in array 1 = same index item in array2
+    # otherwise return true
     return_value = True
     if (len(array1) == len(array2)):
         return_value = False
@@ -356,6 +361,7 @@ def codeword_solver(codewordArray):
     return return_string.format(number_words,number_consonants,number_vowels)
 
 def count_letters(wordArray:list):
+    # assumes all arrays items are words and only alpha characters
     letters = 0
     for idx in range(0,len(wordArray)):
         letters += len(wordArray[idx])
@@ -373,6 +379,7 @@ def count_vowels(wordArray:list):
 
 
 def source_code_getter():
+    # return github link to source code
      return "https://github.com/quietsmilie/VacasaWebService"
      #with open(__file__) as source_file:
          #source_list = source_file.readlines()
