@@ -6,6 +6,7 @@ Main functions to answer the question
 """
 def answer_question( query: str ):
     #Parses input, determines answer, returns string
+   print(query) 
    query_words = query.split(' ')
    strquery=query.lower()
    if (query_words[0].lower() == 'what'):
@@ -38,6 +39,7 @@ def answer_question( query: str ):
                             return source_code_getter()
                         else:
                             return_value = codeword_solver(query_words)
+   print(return_value) 
    return return_value
 
 
@@ -57,8 +59,7 @@ def pattern_solver(patternArray):
 
     while (len(workingArray)>len(used_numbers)):
         loop_count += 1
-        if (loop_count== 3):
-            blank_array = []
+
         walk_count = int(workingArray[idx])
         previous_walk_count = walk_count
         walk_count = apply_walk_rules(walk_count,0, loop_count)
@@ -287,44 +288,50 @@ def ordering_solver(orderingString):
     while (arrays_differ(previousReturnItems, returnItems)):
         previousReturnItems = returnItems.copy()
         for idx in range(1, len(orderingArray)):
-            if (orderingArray[idx].find("-")>0):
+            #if (orderingArray[idx].find("-")>0):
                 # skip first/any row that isn't ordering info
                 orderingRow = str(orderingArray[idx])
 
                 itemToOrder = orderingRow[0]
+                
                 itemToOrderIdx = returnItems.index(itemToOrder)
                 for item in range(1,len(orderingRow)):
                     itemToCompare = orderingItems[item]
                     itemToCompareIdx = returnItems.index(itemToCompare)                
                     if (orderingRow[item] == '<' or (orderingRow[item] == '=' and itemToOrder>itemToCompare and itemToOrderIdx+1 != itemToCompareIdx)):
                         if (itemToOrderIdx > itemToCompareIdx):
-                            returnItems = moveItemsForward(itemToCompareIdx,itemToOrderIdx,returnItems)
+                            returnItems = moveItemsBackward(itemToOrderIdx,itemToCompareIdx,returnItems)
                             itemToOrderIdx = returnItems.index(itemToOrder)
                     else:
                         if (orderingRow[item] == '>' or (orderingRow[item] == '=' and itemToOrder>itemToCompare and itemToOrderIdx+1 != itemToCompareIdx)):
                             if (itemToOrderIdx < itemToCompareIdx):
                                 returnItems = moveItemsBackward(itemToCompareIdx,itemToOrderIdx,returnItems)
                                 itemToOrderIdx = returnItems.index(itemToOrder)
-   
+                    #str3 = ''.join(returnItems[1:len(returnItems)])
+                    #print(str3) 
+                
+#                print("Item to order: " + itemToOrder)
+#                str2 = ''.join(returnItems[1:len(returnItems)])
+#                print(str2) 
     str1 = ''.join(returnItems[1:len(returnItems)])
     return str1
 
 def moveItemsForward(itemToMoveIdx,newItemIdx, itemsToReturn):
-    print("move forward")
+    #print("move forward")
     itemToOrder = itemsToReturn[itemToMoveIdx]
     for itemsToMoveIdx in range(itemToMoveIdx,newItemIdx):
         itemsToReturn[itemsToMoveIdx]=itemsToReturn[itemsToMoveIdx+1]
     itemsToReturn[newItemIdx]=itemToOrder
-    print(itemsToReturn)
+    #print(itemsToReturn)
     return itemsToReturn
 
 def moveItemsBackward(itemToMoveIdx,newItemIdx, itemsToReturn):
-    print("move backward")
+    #print("move backward")
     itemToOrder = itemsToReturn[itemToMoveIdx]
     for itemsToMoveIdx in range(itemToMoveIdx-1,newItemIdx-1,-1):
         itemsToReturn[itemsToMoveIdx+1]=itemsToReturn[itemsToMoveIdx]
     itemsToReturn[newItemIdx]=itemToOrder
-    print(itemsToReturn)    
+    #print(itemsToReturn)    
     return itemsToReturn
 
 def arrays_differ(array1:list,array2:list):
@@ -366,9 +373,10 @@ def count_vowels(wordArray:list):
 
 
 def source_code_getter():
-     with open(__file__) as source_file:
+     return "https://github.com/quietsmilie/VacasaWebService"
+     #with open(__file__) as source_file:
          #source_list = source_file.readlines()
-         return source_file.read()
+      #   return source_file.read()
     # return string contents of this file
 
 
@@ -428,4 +436,19 @@ if __name__ == "__main__":
 #    print("result:   " + answer_question("< 11 25 14 27 56 41 16 36 9 8 >"))
 #    print("")
 
-    print(answer_question("source code"))
+#    print(answer_question("< 43 46 58 12 14 7 39 58 41 15 >"))
+    #print(" ABCDE\r\nA-<---\r\nB---<-\r\nC---->\r\nD---=-\r\nE--->-")
+    print("actual:   " + answer_question(" ABCDE\r\nA=----\r\nB--<--\r\nC--=--\r\nD<->--\r\nE>----"))
+    print("expected: BCDAE")
+    
+#    print(answer_question("source code"))
+    #print(" ABCD\r\nA---<\r\nB-=--\r\nC-<--\r\nD--<-")
+    print("result:   " + answer_question(" ABCD\r\nA---<\r\nB-=--\r\nC-<--\r\nD--<-"))
+    print("expected: ADCB")
+    
+    #print(" ABCDE\r\nA->-<-\r\nB-=---\r\nC---->\r\nD----<\r\nE----=")
+    print("result:   " + answer_question(" ABCDE\r\nA->-<-\r\nB-=---\r\nC---->\r\nD----<\r\nE----="))
+    print("expected: BADEC")
+
+    print("result:   " + answer_question(" ABCDEF\r\nA=-----\r\nB-----<\r\nC-<----\r\nD>-<---\r\nE<-----\r\nF-----="))
+    print("expected: EADCBF")

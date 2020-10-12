@@ -12,6 +12,7 @@ def question(request):
     return_value = ''
     query = request.GET.get('q')
     print(query)
-    return_value = answer_question(query)
+    return_value=query
+    #return_value = answer_question(query)
     return HttpResponse(return_value)
     
